@@ -1,35 +1,27 @@
-stages:
-  - build
-  - test 
-  - deploy
-## dev deployment ##
-build-dev:
+build-qa:
   stage: build
   only:
-    - dev
+    - qa
   tags:
-    - front-dev-new 
+    - qa-front 
   before_script:
-    - cp -f $HOME/envs/env-front-dev .env
+    - cp -f /srv/project/envs/env-front-qa .env
   script:
-    - docker-compose -f dev.docker-compose.yml build #--no-rm
-test-dev:
+    - docker-compose -f qa.docker-compose.yml build #--no-rm
+test-qa:
   stage: test
   only:
-    - dev
+    - qa
   tags:
-    - front-dev-new
+    - qa-front 
   script:
-    - docker run --rm project_front_front-dev:latest yarn jest
+    - docker run --rm project_front_front:latest yarn jest
     
-deploy-dev:
+deploy-qa:
   stage: deploy
   only:
-    - dev
+    - qa
   tags:
-    - front-dev-new
-  before_script:
-    - cp -f $HOME/envs/env-front-dev .env
+    - qa-front
   script: 
-    - docker-compose -f dev.docker-compose.yml up -d --force-recreate --remove-orphans
-    
+    - docker-compose -f qa.docker-compose.yml up -d --force-recreate 
