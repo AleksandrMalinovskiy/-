@@ -1,1 +1,35 @@
-
+stages:
+  - build
+  - test 
+  - deploy
+## dev deployment ##
+build-dev:
+  stage: build
+  only:
+    - dev
+  tags:
+    - front-dev-new 
+  before_script:
+    - cp -f $HOME/envs/env-front-dev .env
+  script:
+    - docker-compose -f dev.docker-compose.yml build #--no-rm
+test-dev:
+  stage: test
+  only:
+    - dev
+  tags:
+    - front-dev-new
+  script:
+    - docker run --rm project_front_front-dev:latest yarn jest
+    
+deploy-dev:
+  stage: deploy
+  only:
+    - dev
+  tags:
+    - front-dev-new
+  before_script:
+    - cp -f $HOME/envs/env-front-dev .env
+  script: 
+    - docker-compose -f dev.docker-compose.yml up -d --force-recreate --remove-orphans
+    
