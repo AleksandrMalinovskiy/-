@@ -1,0 +1,16 @@
+version: "3"
+networks:
+  app-net:
+  
+services:
+  front: 
+    build: .
+    container_name: front-qa
+    networks:
+      - app-net
+    restart: always
+    volumes:
+      - /srv/project/public-uploads:/app/static/uploads
+    environment:
+      TZ: Europe/Moscow
+    entrypoint: npm run start
